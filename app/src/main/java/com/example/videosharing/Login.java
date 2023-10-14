@@ -24,7 +24,7 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
-public class MainActivity extends AppCompatActivity {
+public class Login extends AppCompatActivity {
 
     private SignInClient oneTapClient;
     private BeginSignInRequest signInRequest;
@@ -69,10 +69,10 @@ public class MainActivity extends AppCompatActivity {
                                         if (idToken != null) {
                                             // Got an ID token from Google to use for authentication
                                             //Intent intent = new Intent(
-                                                  //  getApplicationContext(),
-                                                  //  YouTubePlayerActivtiy.class);
+                                            //  getApplicationContext(),
+                                            //  YouTubePlayerActivtiy.class);
                                             //intent.putExtra("CREDENTIAL", credential);
-                                           // startActivity(intent);
+                                            // startActivity(intent);
                                         }
                                     } catch (ApiException e) {
                                         Log.d("API Exception", "issue with sign in");
