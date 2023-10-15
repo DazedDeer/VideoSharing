@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">VideoSharing</string>
     <string name="web_client_id">872797812659-uib3v7j9m9o2inh422o8libd5ftbu63i.apps.googleusercontent.com</string>
+    <string name="main_title">Video Sharing</string>
+    <string name="welcome">Welcome to the video sharing app!</string>
+    <string name="watch_video_btn">Watch a YouTube Video</string>
+    <string name="list_video_btn">List a YouTube Channel Video</string>
 </resources>
