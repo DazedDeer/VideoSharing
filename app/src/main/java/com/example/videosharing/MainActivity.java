@@ -56,8 +56,8 @@ public class MainActivity extends AppCompatActivity {
         watch_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent login = new Intent(getApplicationContext(), Login.class);
-                startActivity(login);
+                Intent player = new Intent(getApplicationContext(), YoutubePlayer.class);
+                startActivity(player);
             }
         });
 

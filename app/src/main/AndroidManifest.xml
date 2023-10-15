@@ -16,6 +16,9 @@
         android:theme="@style/Theme.VideoSharing"
         tools:targetApi="31">
         <activity
+            android:name=".YoutubeApiRequest"
+            android:exported="false" />
+        <activity
             android:name=".YoutubePlayer"
             android:exported="false" />
         <activity
