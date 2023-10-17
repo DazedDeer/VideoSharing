@@ -13,6 +13,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.identity.SignInCredential;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
@@ -35,12 +37,22 @@ public class YoutubePlayer extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_youtube_player);
 
+
+            // Check for existing Google Sign In account, if the user is already signed in
+            // the GoogleSignInAccount will be non-null.
+            GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+
+            if(account == null) {
+                Intent login = new Intent(getApplicationContext(), Login.class);
+                startActivity(login);
+            }
+
             credential = getIntent().getParcelableExtra("CREDENTIAL");
 
             TextView nameTv = findViewById(R.id.userNameTV);
             ImageView avatarView = findViewById(R.id.avatarImage);
-            nameTv.setText(credential.getDisplayName());
-            Picasso.with(this).load(credential.getProfilePictureUri().toString()).into(avatarView);
+            nameTv.setText(account.getDisplayName());
+            Picasso.with(this).load(account.getPhotoUrl().toString()).into(avatarView);
 
             // initialising the GUI widgets for Video Player and user input
             youTubePlayerView = findViewById(R.id.youtube_player_view);
@@ -56,14 +68,8 @@ public class YoutubePlayer extends AppCompatActivity {
                 }
             });
 
-            Button youTubeApiBtn = findViewById(R.id.ytHttpRequestBtn);
-            youTubeApiBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(getApplicationContext(), YouTubeApiRequestActivity.class);
-                    startActivity(intent);
-                }
-            });
+
+
 
             // YouTubePlayer is a lifecycle aware widget, Add a lifecycle observer so the video only
             // plays when it is visible to the user

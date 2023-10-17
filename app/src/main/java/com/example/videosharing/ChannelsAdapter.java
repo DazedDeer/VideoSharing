@@ -7,13 +7,15 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.videosharing.model.ChannelInfo;
+
 import java.util.List;
 
 public class ChannelsAdapter extends RecyclerView.Adapter<ChannelViewHolder> {
 
     List<ChannelInfo> channels;
 
-    public ChannelsAdapter(List<ChannelInfo> info){
+    public ChannelsAdapter(List<ChannelInfo> info) {
         this.channels = info;
     }
 
@@ -37,8 +39,9 @@ public class ChannelsAdapter extends RecyclerView.Adapter<ChannelViewHolder> {
         return channels.size();
     }
 
-    public void updateData(List<ChannelInfo> channels){
+    public void updateData(List<ChannelInfo> channels) {
         this.channels = channels;
         notifyDataSetChanged();
     }
+}
 

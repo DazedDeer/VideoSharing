@@ -22,6 +22,10 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.example.videosharing.model.ChannelInfo;
+import com.example.videosharing.viewModel.YoutubeApiViewModel;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
@@ -44,6 +48,9 @@ public class YoutubeApiRequest extends AppCompatActivity {
     };
 
     GoogleAccountCredential gCredential;
+    String astley_url;
+
+
 
     static final int REQUEST_PERMISSION_GET_ACCOUNTS = 1003;
     private static final String PREF_ACCOUNT_NAME = "accountName";
@@ -52,7 +59,7 @@ public class YoutubeApiRequest extends AppCompatActivity {
     static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
 
 
-    YouTubeApiViewModel ytViewModel;
+    YoutubeApiViewModel ytViewModel;
     RecyclerView channelsRecyclerView;
     ChannelsAdapter adapter;
 
@@ -67,13 +74,23 @@ public class YoutubeApiRequest extends AppCompatActivity {
         // initialise the FirebaseApp
         FirebaseApp.initializeApp(this);
 
+        astley_url = "https://www.youtube.com/channel/UCuAXFkgsw1L7xaCfnd5JJOw";
+
         channelsRecyclerView = findViewById(R.id.channelRecyclerView);
+
+        // Check for existing Google Sign In account, if the user is already signed in
+        // the GoogleSignInAccount will be non-null.
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        if (account == null) {
+            Intent login = new Intent(getApplicationContext(), Login.class);
+            startActivity(login);
+        }
 
         channelsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new ChannelsAdapter(new ArrayList<>());
         channelsRecyclerView.setAdapter(adapter);
 
-        ytViewModel = new ViewModelProvider(this).get(YouTubeApiViewModel.class);
+        ytViewModel = new ViewModelProvider(this).get(YoutubeApiViewModel.class);
         ytViewModel.setApiRequestActivity(this);
 
         youTubePermissionLauncher = registerForActivityResult(
@@ -133,12 +150,12 @@ public class YoutubeApiRequest extends AppCompatActivity {
         adapter.updateData(channels);
     }
 
-    @Override
+   //@Override
     public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
 
     }
 
-    @Override
+  //@Override
     public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
 
     }
@@ -210,7 +227,7 @@ public class YoutubeApiRequest extends AppCompatActivity {
             final int connectionStatusCode) {
         GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
         Dialog dialog = apiAvailability.getErrorDialog(
-                YouTubeApiRequestActivity.this,
+                YoutubeApiRequest.this,
                 connectionStatusCode,
                 REQUEST_GOOGLE_PLAY_SERVICES);
         dialog.show();

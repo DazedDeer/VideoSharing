@@ -70,6 +70,19 @@ dependencies {
 
     implementation 'com.google.android.gms:play-services-auth:20.7.0'
 
+    // For channels
+    implementation 'androidx.recyclerview:recyclerview:1.3.1'
+    implementation 'androidx.cardview:cardview:1.0.0'
+    implementation 'com.google.android.material:material:1.10.0'
+
+    implementation 'com.squareup.retrofit2:retrofit:2.0.1'
+    implementation 'com.squareup.retrofit2:converter-gson:2.8.1'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.5.0'
+    implementation 'com.intuit.sdp:sdp-android:1.0.6'
+
+    implementation 'com.jakewharton:butterknife:10.2.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.1'
+    implementation 'com.github.bumptech.glide:glide:4.11.0'
 }
 
 // added a new configuration

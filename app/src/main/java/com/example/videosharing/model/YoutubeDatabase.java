@@ -1,5 +1,6 @@
 package com.example.videosharing.model;
 
+
 import android.content.Context;
 
 import androidx.room.Database;
@@ -11,15 +12,15 @@ import androidx.room.RoomDatabase;
         version = 1,
         exportSchema = false
 )
-public abstract class YouTubeDatabase extends RoomDatabase {
-    private static YouTubeDatabase database;
-    public abstract  YouTubeDatabaseAccessObject getDatabaseDao();
+public abstract class YoutubeDatabase extends RoomDatabase {
+    private static YoutubeDatabase database;
+    public abstract  YoutubeDao getDatabaseDao();
 
-    public static synchronized YouTubeDatabase getDBInstance(Context context) {
+    public static synchronized YoutubeDatabase getDBInstance(Context context) {
         if(database == null) {
             database = Room.databaseBuilder(
                             context.getApplicationContext(),
-                            YouTubeDatabase.class,
+                            YoutubeDatabase.class,
                             "YTDatabase"
                     )
                     .fallbackToDestructiveMigration()

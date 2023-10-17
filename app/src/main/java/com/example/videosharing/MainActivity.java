@@ -31,13 +31,14 @@ import com.google.android.gms.tasks.OnSuccessListener;
 public class MainActivity extends AppCompatActivity {
 
     TextView welcome;
-    Button watch_btn;
+    Button watch_btn, channel_btn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         watch_btn = findViewById(R.id.watch_video_btn);
+        channel_btn = findViewById(R.id.list_video_btn);
         welcome = findViewById(R.id.welcome);
 
         // Check for existing Google Sign In account, if the user is already signed in
@@ -58,6 +59,14 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent player = new Intent(getApplicationContext(), YoutubePlayer.class);
                 startActivity(player);
+            }
+        });
+
+        channel_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent channelList = new Intent(getApplicationContext(), YoutubeApiRequest.class);
+                startActivity(channelList);
             }
         });
 

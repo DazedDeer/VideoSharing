@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.youtube.model.ChannelInfo;
+import com.example.videosharing.model.ChannelInfo;
 
 public class ChannelViewHolder extends RecyclerView.ViewHolder {
     CardView cardView;
