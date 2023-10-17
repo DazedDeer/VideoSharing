@@ -50,8 +50,6 @@ public class YoutubeApiRequest extends AppCompatActivity {
     GoogleAccountCredential gCredential;
     String astley_url;
 
-
-
     static final int REQUEST_PERMISSION_GET_ACCOUNTS = 1003;
     private static final String PREF_ACCOUNT_NAME = "accountName";
 
