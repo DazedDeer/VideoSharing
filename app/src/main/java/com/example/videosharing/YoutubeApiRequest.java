@@ -20,9 +20,14 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.videosharing.API.SingltonRetrofitObject;
 import com.example.videosharing.model.ChannelInfo;
+import com.example.videosharing.model.Items;
+import com.example.videosharing.model.VideoModel;
 import com.example.videosharing.viewModel.YoutubeApiViewModel;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -39,29 +44,15 @@ import java.util.List;
 
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class YoutubeApiRequest extends AppCompatActivity {
 
-    private static final String[] SCOPES = {
-            YouTubeScopes.YOUTUBE_READONLY,
-            YouTubeScopes.YOUTUBE_FORCE_SSL
-    };
-
-    GoogleAccountCredential gCredential;
     String astley_url;
-
-    static final int REQUEST_PERMISSION_GET_ACCOUNTS = 1003;
-    private static final String PREF_ACCOUNT_NAME = "accountName";
-
-
-    static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
-
-
-    YoutubeApiViewModel ytViewModel;
-    RecyclerView channelsRecyclerView;
-    ChannelsAdapter adapter;
-
-    public ActivityResultLauncher<Intent> youTubePermissionLauncher, chooseAccountLauncher;
+    RecyclerView recyclerView;
+    ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,12 +60,11 @@ public class YoutubeApiRequest extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_youtube_api_request);
 
-        // initialise the FirebaseApp
-        FirebaseApp.initializeApp(this);
+        recyclerView = findViewById(R.id.recyclerView);
+        progressBar = findViewById(R.id.progressBar);
 
-        astley_url = "https://www.youtube.com/channel/UCuAXFkgsw1L7xaCfnd5JJOw";
-
-        channelsRecyclerView = findViewById(R.id.channelRecyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.hasFixedSize();
 
         // Check for existing Google Sign In account, if the user is already signed in
         // the GoogleSignInAccount will be non-null.
@@ -84,157 +74,47 @@ public class YoutubeApiRequest extends AppCompatActivity {
             startActivity(login);
         }
 
-        channelsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new ChannelsAdapter(new ArrayList<>());
-        channelsRecyclerView.setAdapter(adapter);
+        doApiCall();
+    }
 
-        ytViewModel = new ViewModelProvider(this).get(YoutubeApiViewModel.class);
-        ytViewModel.setApiRequestActivity(this);
+    //https://www.googleapis.com/youtube/v3/search?
+    //key=AIzaSyAzzimVmu9nBvifyIdwaY-el371vrczEhk
+    //&channelId=UCuAXFkgsw1L7xaCfnd5JJOw
+    //&part=snippet
+    //&order=date
+    //&maxResults=50
+    //&type=video
 
-        youTubePermissionLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                new ActivityResultCallback<ActivityResult>() {
-                    @Override
-                    public void onActivityResult(ActivityResult result) {
-                        if (result.getResultCode() == Activity.RESULT_OK) {
-                            getResultsFromApi();
-                        }
-                    }
-                }
+    private void doApiCall() {
+
+        Call<VideoModel> videoModelCall = SingltonRetrofitObject.getmInstance().getAPI().getVideosDetails(
+                getString(R.string.youtubeAPIKey),
+                "UCuAXFkgsw1L7xaCfnd5JJOw",
+                "snippet",
+                "date",
+                "50",
+                "video"
         );
 
-        chooseAccountLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                new ActivityResultCallback<ActivityResult>() {
-                    @Override
-                    public void onActivityResult(ActivityResult result) {
-                        if (result.getResultCode() == RESULT_OK && result.getData() != null &&
-                                result.getData().getExtras() != null) {
-                            String accountName =
-                                    result.getData().getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
-                            if (accountName != null) {
-                                SharedPreferences settings =
-                                        getPreferences(Context.MODE_PRIVATE);
-                                SharedPreferences.Editor editor = settings.edit();
-                                editor.putString(PREF_ACCOUNT_NAME, accountName);
-                                editor.apply();
-                                gCredential.setSelectedAccountName(accountName);
-                                getResultsFromApi();
-                            }
-                        }
-                    }
-                }
-        );
-
-        final Observer<List<ChannelInfo>> channelsObserver = new Observer<List<ChannelInfo>>() {
+        videoModelCall.enqueue(new Callback<VideoModel>() {
             @Override
-            public void onChanged(List<ChannelInfo> channelInfo) {
-                updateChannelsData(channelInfo);
+            public void onResponse(Call<VideoModel> call, Response<VideoModel> response) {
+
+                setRecyclerView(response.body().getItems());
             }
-        };
 
-        ytViewModel.getYtChannels().observe(this, channelsObserver);
+            @Override
+            public void onFailure(Call<VideoModel> call, Throwable t) {
 
-        gCredential = GoogleAccountCredential.usingOAuth2(
-                        getApplicationContext(), Arrays.asList(SCOPES))
-                .setBackOff(new ExponentialBackOff());
-
-        if (gCredential.getSelectedAccountName() == null) {
-            chooseAccount();
-        }
-    }
-
-    private void updateChannelsData(List<ChannelInfo> channels){
-        adapter.updateData(channels);
-    }
-
-   //@Override
-    public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
-
-    }
-
-  //@Override
-    public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
-
-    }
-
-    @AfterPermissionGranted(REQUEST_PERMISSION_GET_ACCOUNTS)
-    private void chooseAccount() {
-        if (EasyPermissions.hasPermissions(this, android.Manifest.permission.GET_ACCOUNTS))
-        {
-            String accountName = getPreferences(Context.MODE_PRIVATE)
-                    .getString(PREF_ACCOUNT_NAME, null);
-            if (accountName != null) {
-                gCredential.setSelectedAccountName(accountName);
-                getResultsFromApi();
-            } else {
-                // Start a dialog from which the user can choose an account
-                chooseAccountLauncher.launch(gCredential.newChooseAccountIntent());
             }
-        } else {
-            // Request the GET_ACCOUNTS permission via a user dialog
-            EasyPermissions.requestPermissions(
-                    this,
-                    "This app needs to access your Google account (via Contacts).",
-                    REQUEST_PERMISSION_GET_ACCOUNTS,
-                    android.Manifest.permission.GET_ACCOUNTS);
-        }
+        });
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        EasyPermissions.onRequestPermissionsResult(
-                requestCode, permissions, grantResults, this);
-    }
+    private void setRecyclerView(Items[] items) {
 
-    private void getResultsFromApi() {
-        if (! isGooglePlayServicesAvailable()) {
-            acquireGooglePlayServices();
-        } else if (gCredential.getSelectedAccountName() == null) {
-            chooseAccount();
-        } else if (! isDeviceOnline()) {
-            Toast.makeText(this, "No network connection available.", Toast.LENGTH_LONG).show();
-        } else {
-            // thread to request new MakeRequestTask(gCredential).execute();
-            ytViewModel.makeYtRequest(gCredential);
-        }
-    }
-
-    private boolean isGooglePlayServicesAvailable() {
-        GoogleApiAvailability apiAvailability =
-                GoogleApiAvailability.getInstance();
-        final int connectionStatusCode =
-                apiAvailability.isGooglePlayServicesAvailable(this);
-        return connectionStatusCode == ConnectionResult.SUCCESS;
-    }
-
-    private void acquireGooglePlayServices() {
-        GoogleApiAvailability apiAvailability =
-                GoogleApiAvailability.getInstance();
-        final int connectionStatusCode =
-                apiAvailability.isGooglePlayServicesAvailable(this);
-        if (apiAvailability.isUserResolvableError(connectionStatusCode)) {
-            showGooglePlayServicesAvailabilityErrorDialog(connectionStatusCode);
-        }
-    }
-
-    void showGooglePlayServicesAvailabilityErrorDialog(
-            final int connectionStatusCode) {
-        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
-        Dialog dialog = apiAvailability.getErrorDialog(
-                YoutubeApiRequest.this,
-                connectionStatusCode,
-                REQUEST_GOOGLE_PLAY_SERVICES);
-        dialog.show();
-    }
-
-    private boolean isDeviceOnline() {
-        ConnectivityManager connMgr =
-                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-        return (networkInfo != null && networkInfo.isConnected());
+        MyAdapter myAdapter = new MyAdapter(this, items);
+        recyclerView.setAdapter(myAdapter);
+        recyclerView.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.GONE);
     }
 }

@@ -68,7 +68,7 @@ public class MakeYoutubeApiRequest implements Runnable {
             }
         } catch (UserRecoverableAuthIOException e) {
             e.printStackTrace();
-            apiRequest.youTubePermissionLauncher.launch(e.getIntent());
+//            apiRequest.youTubePermissionLauncher.launch(e.getIntent());
         } catch (IOException e) {
             e.printStackTrace();
         }

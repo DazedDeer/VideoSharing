@@ -52,19 +52,29 @@ public class YoutubePlayer extends AppCompatActivity {
             TextView nameTv = findViewById(R.id.userNameTV);
             ImageView avatarView = findViewById(R.id.avatarImage);
             nameTv.setText(account.getDisplayName());
-            Picasso.with(this).load(account.getPhotoUrl().toString()).into(avatarView);
+            Picasso.get().load(account.getPhotoUrl()).into(avatarView);
+            //Picasso.with(this).load(account.getPhotoUrl().toString()).into(avatarView);
 
             // initialising the GUI widgets for Video Player and user input
             youTubePlayerView = findViewById(R.id.youtube_player_view);
             youTubePlayerView.setEnableAutomaticInitialization(false);
             videoUrlEt = findViewById(R.id.ytVideoUrlEt);
             Button playBtn = findViewById(R.id.ytPlayVideoBtn);
+            Button backBtn = findViewById(R.id.backBtn);
             // setup the click event for the button
             playBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     // calling method to play the video
                     playVideoButtonClick();
+                }
+            });
+
+            backBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent back = new Intent(getApplicationContext(), MainActivity.class);
+                    startActivity(back);
                 }
             });
 
