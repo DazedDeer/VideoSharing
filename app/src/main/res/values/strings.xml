@@ -14,4 +14,5 @@
     <string name="subscribers">Subscribers</string>
     <string name="back_btn">Back to Main Menu</string>
     <string name="snipper">snippet%2Cstatistics</string>
+    <string name="back_channels">Back to the Channels List</string>
 </resources>
