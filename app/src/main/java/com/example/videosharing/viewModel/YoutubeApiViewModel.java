@@ -52,7 +52,7 @@ public class YoutubeApiViewModel extends ViewModel implements YoutubeViewModelMe
         threads.add(thread);
         threads.get(0).start();
 
-        String [] channels = {"GoogleDevelopers", "AndroidDevelopers", "derekbanas", "programmingwithmosh"};
+        String [] channels = {"Rick Astley"};
         for (String name : channels) {
             Thread nThread = new Thread(new MakeYoutubeApiRequest(credential, this,
                     apiRequest, false, name));
