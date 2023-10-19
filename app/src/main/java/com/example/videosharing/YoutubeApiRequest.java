@@ -1,64 +1,30 @@
 package com.example.videosharing;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModel;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.accounts.AccountManager;
-import android.app.Activity;
-import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.videosharing.API.SingltonRetrofitObject;
 import com.example.videosharing.channelModel.ChannelVideoModel;
-import com.example.videosharing.model.Channel;
-import com.example.videosharing.model.ChannelInfo;
 import com.example.videosharing.model.Items;
 import com.example.videosharing.channelModel.Ittems;
 import com.example.videosharing.model.VideoModel;
-import com.example.videosharing.viewModel.YoutubeApiViewModel;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
-import com.google.api.client.util.ExponentialBackOff;
-import com.google.api.services.youtube.YouTubeScopes;
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import pub.devrel.easypermissions.AfterPermissionGranted;
-import pub.devrel.easypermissions.EasyPermissions;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -71,7 +37,7 @@ public class YoutubeApiRequest extends AppCompatActivity {
 
 
     TextView channelName, channelDesc, subscribers;
-    YoutubeApiViewModel ytViewModel;
+
     private DatabaseReference mDatabase;
     DatabaseReference myRef;
     FirebaseDatabase database;
@@ -97,8 +63,8 @@ public class YoutubeApiRequest extends AppCompatActivity {
 
 
 
-        ytViewModel = new ViewModelProvider(this).get(YoutubeApiViewModel.class);
-        ytViewModel.setApiRequestActivity(this);
+        //ytViewModel = new ViewModelProvider(this).get(YoutubeApiViewModel.class);
+        //ytViewModel.setApiRequestActivity(this);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("astley");
         // Read from the database
