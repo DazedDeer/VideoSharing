@@ -210,6 +210,7 @@ public class YoutubeApiRequest extends AppCompatActivity {
             @Override
             public void onResponse(Call<ChannelVideoModel> call, Response<ChannelVideoModel> response) {
 
+                System.out.println(response.toString());
                 Ittems[] ittems = response.body().getIttems();
                 String title = ittems[0].getSnippet().getTitle();
                 String description = ittems[0].getSnippet().getDescription();
