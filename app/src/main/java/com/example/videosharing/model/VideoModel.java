@@ -1,5 +1,7 @@
 package com.example.videosharing.model;
 
+// The model that will be used to access channel video list information from the get channel videos
+// query's JSON response
 public class VideoModel {
     private String regionCode;
 

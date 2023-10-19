@@ -1,5 +1,7 @@
 package com.example.videosharing.channelModel;
 
+// A submodel of ChannelVideoModel that will be used to access channel detail information from the
+// get channel info query's JSON response
 public class Localized {
     private String description;
 

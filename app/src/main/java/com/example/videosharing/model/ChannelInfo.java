@@ -12,6 +12,7 @@ import java.io.Serializable;
 
 import javax.annotation.Nonnull;
 
+// Store Channel information
 @Entity(tableName = "Channels")
 public class ChannelInfo implements Serializable {
     @Ignore
