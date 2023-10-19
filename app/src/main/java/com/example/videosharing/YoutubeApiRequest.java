@@ -147,7 +147,7 @@ public class YoutubeApiRequest extends AppCompatActivity {
 
         // Calls for channel video list information
         // According to network inspector, this took 621ms to complete, I could further optimise this
-        // by limiting the maxResult returned
+        // by further limiting the maxResult returned to 10
         Call<VideoModel> videoModelCall = SingltonRetrofitObject.getmInstance().getAPI().getVideosDetails(
                 getString(R.string.youtubeAPIKey),
                 "UCuAXFkgsw1L7xaCfnd5JJOw",
