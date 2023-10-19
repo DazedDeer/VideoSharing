@@ -1,8 +1,5 @@
 package com.example.videosharing.channelModel;
 
-import com.example.videosharing.model.Items;
-import com.example.videosharing.model.PageInfo;
-
 public class ChannelVideoModel {
 
     private String kind;
@@ -11,7 +8,7 @@ public class ChannelVideoModel {
 
     private String etag;
 
-    private Items[] items;
+    private Ittems[] items;
 
     public String getKind ()
     {
@@ -43,12 +40,12 @@ public class ChannelVideoModel {
         this.etag = etag;
     }
 
-    public Items[] getItems ()
+    public Ittems[] getIttems ()
     {
         return items;
     }
 
-    public void setItems (Items[] items)
+    public void setItems (Ittems[] items)
     {
         this.items = items;
     }

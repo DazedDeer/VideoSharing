@@ -23,4 +23,20 @@ public class ExampleInstrumentedTest {
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
         assertEquals("com.example.videosharing", appContext.getPackageName());
     }
+
+          //  @Test
+         //   public void correctLinkReturnsTrue() {
+           //     String result = YoutubePlayer.youTubeLinkWithoutProtocolAndDomain("https://www.youtube.com/watch?v=6nda3wakNn4");
+         //       String expected = "https://www.youtube.com/watch?v=6nda3wakNn4";
+
+           //     assertEquals(expected, result);
+       //     }
+
+         //   @Test
+       //     public void incorrectLinkReturnsEmpty() {
+        //        String result = YoutubePlayer.youTubeLinkWithoutProtocolAndDomain("https://www.youttube.com/watch?v=6nda3wakNn4");
+        //        String expected = "";
+
+          //      assertEquals(expected, result);
+         //   }
 }

@@ -112,14 +112,16 @@ public class YoutubePlayer extends AppCompatActivity {
         private String youTubeLinkWithoutProtocolAndDomain(String url) {
             // matches the domain and protocol part like first part of the following urls and delete
             // them for url input: https://www.youtube.com/watch?v=KAbJnGLDxnE
-            Pattern compiledPattern = Pattern.compile(youTubeUrlRegex);
-            Matcher matcher = compiledPattern.matcher(url);
-            if (matcher.find()) {
-                return url.replace(matcher.group(), "");
+            boolean success;
+            String pattern = "^(http(s)?:\\/\\/)?((w){3}.)?youtu(be|.be)?(\\.com)?\\/.+";
+            if(!url.isEmpty() && url.matches(pattern)) {
+                return url;
+            } else {
+                Toast.makeText(this, "Invalid URL", Toast.LENGTH_LONG).show();
+                return "";
             }
-            return url;
         }
-        public void playVideoButtonClick() {
+        private void playVideoButtonClick() {
             // check if the user has entered a video url
             String urlStr = videoUrlEt.getText().toString();
             // if they haven't and its empty, load the default video

@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -27,6 +28,9 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -41,9 +45,14 @@ public class MainActivity extends AppCompatActivity {
         channel_btn = findViewById(R.id.list_video_btn);
         welcome = findViewById(R.id.welcome);
 
+
+
         // Check for existing Google Sign In account, if the user is already signed in
         // the GoogleSignInAccount will be non-null.
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        FirebaseApp.initializeApp(this);
+        String name = account.getDisplayName();
+        Uri avatar = account.getPhotoUrl();
 
         if(account == null) {
             // Send the user to login if they are not signed in
@@ -51,8 +60,11 @@ public class MainActivity extends AppCompatActivity {
             startActivity(login);
         } else {
             String userName = account.getDisplayName();
-            welcome.setText("Welcome to Video Sharing, " + userName);
+            welcome.setText("Welcome to Video Sharing (Rick Astley Edition), " + userName);
         }
+
+        FirebaseApp.initializeApp(this);
+
 
         watch_btn.setOnClickListener(new View.OnClickListener() {
             @Override
