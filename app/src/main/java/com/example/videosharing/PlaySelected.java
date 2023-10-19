@@ -23,6 +23,7 @@ import com.squareup.picasso.Picasso;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+// Play the channel's selected video from the list of channel videos
 public class PlaySelected extends AppCompatActivity {
 
     SignInCredential credential;
@@ -34,34 +35,41 @@ public class PlaySelected extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play_selected);
-        // Check for existing Google Sign In account, if the user is already signed in
-        // the GoogleSignInAccount will be non-null.
+
+        // Check if the user is already signed in
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
 
+        // If the user is not signed in, bring them to the log in page
         if(account == null) {
             Intent login = new Intent(getApplicationContext(), Login.class);
             startActivity(login);
         }
 
-        credential = getIntent().getParcelableExtra("CREDENTIAL");
-
+        // Instantiate the user Views
         TextView nameTv = findViewById(R.id.userNameTV);
         ImageView avatarView = findViewById(R.id.avatarImage);
+
+        // Fill the views with the user's information
         nameTv.setText(account.getDisplayName());
         Picasso.get().load(account.getPhotoUrl()).into(avatarView);
         title = findViewById(R.id.selected_title);
-        //Picasso.with(this).load(account.getPhotoUrl().toString()).into(avatarView);
 
-        // initialising the GUI widgets for Video Player and user input
+        // initiate the selected video's video player
         youTubePlayerView = findViewById(R.id.youtube_player_view);
         youTubePlayerView.setEnableAutomaticInitialization(false);
+
+        // instantiate the back button
         Button backBtn = findViewById(R.id.backBtn);
 
+        // Get the selected video's details
         Intent intent = getIntent();
         String videoId = intent.getExtras().getString("id");
         String videoTitle = intent.getExtras().getString("title");
+
+        // Set the video's title
         title.setText(videoTitle);
 
+        // takes the user back to the channel information activity
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -70,11 +78,10 @@ public class PlaySelected extends AppCompatActivity {
             }
         });
 
-        // YouTubePlayer is a lifecycle aware widget, Add a lifecycle observer so the video only
-        // plays when it is visible to the user
+        // Makes the video play only when the user is looking at the activity
         getLifecycle().addObserver(youTubePlayerView);
 
-        // initialising the YouTubePlayerView and load the default video to play
+        // Instantiate the player with the selected video
         youTubePlayerView.initialize(new AbstractYouTubePlayerListener() {
             @Override
             public void onReady(@NonNull YouTubePlayer youTubePlayer) {
@@ -82,8 +89,5 @@ public class PlaySelected extends AppCompatActivity {
                 youTubePlayer.loadVideo(videoId, 0);
             }
         });
-    }
-    private  void playVideo(YouTubePlayer player) {
-        player.loadVideo(videoId, 0);
     }
 }

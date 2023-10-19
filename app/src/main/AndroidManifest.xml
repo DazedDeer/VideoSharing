@@ -16,11 +16,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.VideoSharing"
         tools:targetApi="31">
+        <profileable
+            android:shell="true"
+            tools:targetApi="29" />
+
         <activity
             android:name=".PlaySelected"
-            android:exported="false" />
-        <activity
-            android:name=".ChannelInfoActivity"
             android:exported="false" />
         <activity
             android:name=".YoutubeApiRequest"

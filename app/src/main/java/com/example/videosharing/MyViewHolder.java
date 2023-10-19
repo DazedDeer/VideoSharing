@@ -7,6 +7,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+// Holds channel video information
 public class MyViewHolder extends RecyclerView.ViewHolder {
 
     public ImageView imageView;
@@ -15,6 +16,7 @@ public class MyViewHolder extends RecyclerView.ViewHolder {
     public MyViewHolder(@NonNull View itemView) {
         super(itemView);
 
+        // Views for the channel video title and thumbnail
         imageView = itemView.findViewById(R.id.imageView);
         textView = itemView.findViewById(R.id.textView);
     }

@@ -20,14 +20,16 @@ public class Login extends AppCompatActivity {
     GoogleSignInAccount account;
     GoogleSignInClient mGoogleSignInClient;
 
+    // Sign in success code
     int RC_SIGN_IN = 100;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        // Configure sign-in to request the user's ID, email address, and basic
-// profile. ID and basic profile are included in DEFAULT_SIGN_IN.
+        // Request the user's ID, email address, and basic
+        // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
@@ -35,10 +37,11 @@ public class Login extends AppCompatActivity {
         // Build a GoogleSignInClient with the options specified by gso.
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
-        // Check for existing Google Sign In account, if the user is already signed in
-        // the GoogleSignInAccount will be non-null.
+        // Check for a previous sign in, if the user is already signed in, the GoogleSignInAccount
+        // will not be null
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
 
+        // If the user is already signed in, take them to the main menu
         if(account != null) {
             goToMain();
         }
@@ -47,52 +50,55 @@ public class Login extends AppCompatActivity {
         SignInButton signInButton = findViewById(R.id.signIn);
         signInButton.setSize(SignInButton.SIZE_STANDARD);
 
+        // Set the sign in button's on click listener
         signInButton.setOnClickListener(this::onClick);
     }
 
+    // Method to take the user back to the main menu
     private void goToMain() {
         Intent main = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(main);
     }
 
 
+    // Launches the signIn() method when the sign in button is clicked
     public void onClick(View v) {
         if (v.getId() == R.id.signIn) {
                 signIn();
-            // ...
         }
     }
 
+    // Signs the user in
     private void signIn() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
+    // Prepare sign in
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
+        // Result returned from launching the GoogleSignInClient Intent
         if (requestCode == RC_SIGN_IN) {
-            // The Task returned from this call is always completed, no need to attach
-            // a listener.
+            // Make a googleSignIn task
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             handleSignInResult(task);
         }
     }
 
+    // Handle the signIn request
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         try {
+            // Try to create an account
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
 
-            // Signed in successfully, show authenticated UI.
-            //updateUI(account);
+            // Signed in successfully, bring the user to the main menu
             goToMain();
+
         } catch (ApiException e) {
-            // The ApiException status code indicates the detailed failure reason.
-            // Please refer to the GoogleSignInStatusCodes class reference for more information.
+            // Sign in failed
             Log.w("Warning", "signInResult:failed code=" + e.getStatusCode());
-            //updateUI(null);
         }
     }
 }

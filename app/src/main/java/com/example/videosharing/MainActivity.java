@@ -41,14 +41,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Instantiate Views
         watch_btn = findViewById(R.id.watch_video_btn);
         channel_btn = findViewById(R.id.list_video_btn);
         welcome = findViewById(R.id.welcome);
 
 
 
-        // Check for existing Google Sign In account, if the user is already signed in
-        // the GoogleSignInAccount will be non-null.
+        // Check if the user has already signed in
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
         FirebaseApp.initializeApp(this);
 
@@ -58,15 +58,14 @@ public class MainActivity extends AppCompatActivity {
             Intent login = new Intent(getApplicationContext(), Login.class);
             startActivity(login);
         } else {
+            // The user is signed in, display their details
             String userName = account.getDisplayName();
             welcome.setText("Welcome to Video Sharing (Rick Astley Edition), " + userName);
             String name = account.getDisplayName();
             Uri avatar = account.getPhotoUrl();
         }
 
-        FirebaseApp.initializeApp(this);
-
-
+        // Takes the user to the video player
         watch_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -75,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // Takes the user to the Rick Astley Channel information activity
         channel_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -82,6 +82,5 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(channelList);
             }
         });
-
     }
 }

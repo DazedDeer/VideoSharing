@@ -24,12 +24,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class YoutubePlayer extends AppCompatActivity {
-    SignInCredential credential;
+
     YouTubePlayerView youTubePlayerView;
     EditText videoUrlEt;
     String videoId;
 
-    final String youTubeUrlRegex = "^(https?)?(://)?(www.)?(m.)?((youtube.com)|(youtu.be))/";
     final String[] videoIdRegex = { "\\?vi?=([^&]*)","watch\\?.*v=([^&]*)", "(?:embed|vi?)/([^/?]*)", "^([A-Za-z0-9\\-]*)"};
 
     @Override
@@ -37,39 +36,42 @@ public class YoutubePlayer extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_youtube_player);
 
-
-            // Check for existing Google Sign In account, if the user is already signed in
-            // the GoogleSignInAccount will be non-null.
+            // Check if the user is already signed in
             GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
 
+            // If the user isn't signed in, take them to the login page
             if(account == null) {
                 Intent login = new Intent(getApplicationContext(), Login.class);
                 startActivity(login);
             }
 
-            credential = getIntent().getParcelableExtra("CREDENTIAL");
-
+            // Instantiate the user views
             TextView nameTv = findViewById(R.id.userNameTV);
             ImageView avatarView = findViewById(R.id.avatarImage);
+
+            // Fill the user views with the user's details
             nameTv.setText(account.getDisplayName());
             Picasso.get().load(account.getPhotoUrl()).into(avatarView);
-            //Picasso.with(this).load(account.getPhotoUrl().toString()).into(avatarView);
 
-            // initialising the GUI widgets for Video Player and user input
+            // Instantiate the player GUI
             youTubePlayerView = findViewById(R.id.youtube_player_view);
             youTubePlayerView.setEnableAutomaticInitialization(false);
             videoUrlEt = findViewById(R.id.ytVideoUrlEt);
+
+            // Instantiate the buttons
             Button playBtn = findViewById(R.id.ytPlayVideoBtn);
             Button backBtn = findViewById(R.id.backBtn);
-            // setup the click event for the button
+
+            // Click event that plays the video
             playBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    // calling method to play the video
+                    // Plays the video
                     playVideoButtonClick();
                 }
             });
 
+            // Takes the user back to the main menu
             backBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -78,14 +80,10 @@ public class YoutubePlayer extends AppCompatActivity {
                 }
             });
 
-
-
-
-            // YouTubePlayer is a lifecycle aware widget, Add a lifecycle observer so the video only
-            // plays when it is visible to the user
+            // Makes the player only play when it is visible to the user
             getLifecycle().addObserver(youTubePlayerView);
 
-            // initialising the YouTubePlayerView and load the default video to play
+            // Instantiate the player with a default video
             youTubePlayerView.initialize(new AbstractYouTubePlayerListener() {
                 @Override
                 public void onReady(@NonNull YouTubePlayer youTubePlayer) {
@@ -96,9 +94,11 @@ public class YoutubePlayer extends AppCompatActivity {
             });
         }
 
+        // Extract the video ID
         public String extractVideoIdFromUrl(String url) {
             String youTubeLinkWithoutProtocolAndDomain = youTubeLinkWithoutProtocolAndDomain(url);
-            // extract the VideoID and return it
+
+            // Extract and return the video ID
             for(String regex : videoIdRegex) {
                 Pattern compiledPattern = Pattern.compile(regex);
                 Matcher matcher = compiledPattern.matcher(youTubeLinkWithoutProtocolAndDomain);
@@ -109,26 +109,31 @@ public class YoutubePlayer extends AppCompatActivity {
             return null;
         }
 
+        // Checks if the URL is valid
         private String youTubeLinkWithoutProtocolAndDomain(String url) {
-            // matches the domain and protocol part like first part of the following urls and delete
-            // them for url input: https://www.youtube.com/watch?v=KAbJnGLDxnE
-            boolean success;
+
+            // URL regex
             String pattern = "^(http(s)?:\\/\\/)?((w){3}.)?youtu(be|.be)?(\\.com)?\\/.+";
             if(!url.isEmpty() && url.matches(pattern)) {
+                // valid URL
                 return url;
             } else {
+                // invalid URL
                 Toast.makeText(this, "Invalid URL", Toast.LENGTH_LONG).show();
                 return "";
             }
         }
+
+        // Plays the video from the user's URL
         private void playVideoButtonClick() {
-            // check if the user has entered a video url
+            // Get the URL
             String urlStr = videoUrlEt.getText().toString();
-            // if they haven't and its empty, load the default video
+            // Check if the URL is empty
             if(urlStr.isEmpty()) {
+                // URL is empty, assign a default ID
                 videoId = "dQw4w9WgXcQ";
             } else {
-                // otherwise get the videoID from the URL entered and store it in videoID
+                // URL is not empty, extract a video ID
                 videoId = extractVideoIdFromUrl(urlStr);
             }
             // if a valid URL is provided play the video
