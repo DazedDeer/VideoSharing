@@ -51,8 +51,7 @@ public class MainActivity extends AppCompatActivity {
         // the GoogleSignInAccount will be non-null.
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
         FirebaseApp.initializeApp(this);
-        String name = account.getDisplayName();
-        Uri avatar = account.getPhotoUrl();
+
 
         if(account == null) {
             // Send the user to login if they are not signed in
@@ -61,6 +60,8 @@ public class MainActivity extends AppCompatActivity {
         } else {
             String userName = account.getDisplayName();
             welcome.setText("Welcome to Video Sharing (Rick Astley Edition), " + userName);
+            String name = account.getDisplayName();
+            Uri avatar = account.getPhotoUrl();
         }
 
         FirebaseApp.initializeApp(this);
